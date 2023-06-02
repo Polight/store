@@ -1,0 +1,37 @@
+{
+  "name": "@polight/store",
+  "version": "0.0.1",
+  "description": "Low-Tech & Future-Proof Store",
+  "main": "store.js",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c && rollup -c rollup.config.minified.js",
+    "deploy": "git switch main && npm run build && npm publish",
+    "test": "echo 'test still need to be implemented, contribution needed :)'"
+  },
+  "devDependencies": {
+    "rollup": "*",
+    "rollup-plugin-gzip": "*",
+    "rollup-plugin-terser": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Polight/store.git"
+  },
+  "keywords": [
+    "store",
+    "state",
+    "reactive",
+    "vuejs",
+    "react",
+    "svelte",
+    "riot",
+    "lego"
+  ],
+  "author": "Vincent Agnano <vinyll>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Polight/lego/issues"
+  },
+  "homepage": "https://github.com/Polight/lego#readme"
+}
