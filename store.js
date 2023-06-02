@@ -11,8 +11,7 @@ class AbstractStore {
   }
 
   subscribe(subscriber, props = []) {
-    const selectedProps = Array.isArray(props) ? props : Object.keys(props)
-    this.subscribers.push({ target: subscriber, props: selectedProps })
+    this.subscribers.push({ target: subscriber, props: this.propsNames(props) })
   }
 
   get state() {
@@ -24,13 +23,17 @@ class AbstractStore {
     this.notify()
   }
 
-  getSelectedState(selectedProps) {
-    return selectedProps.reduce((selectedState, prop) => {
+  getSelectedState(props = []) {
+    return props.reduce((selectedState, prop) => {
       if (prop in this.state) {
         selectedState[prop] = this.state[prop]
       }
       return selectedState
     }, {})
+  }
+
+  propsNames(props) {
+    return Array.isArray(props) ? props : Object.keys(props)
   }
 
   notify() {
@@ -59,7 +62,7 @@ class AbstractStore {
 class LegoStore extends AbstractStore {
   subscribe(subscriber, props = []) {
     super.subscribe(subscriber, props)
-    subscriber.setState(this.getSelectedState(props))
+    subscriber.setState(this.getSelectedState(this.propsNames(props)))
   }
   notifyCall(target, props) {
     target.render(props)
