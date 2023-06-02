@@ -59,7 +59,7 @@ class AbstractStore {
 class LegoStore extends AbstractStore {
   subscribe(subscriber, props = []) {
     super.subscribe(subscriber, props)
-    subscriber.setState(this.getSelectedState(selectedProps))
+    subscriber.setState(this.getSelectedState(props))
   }
   notifyCall(target, props) {
     target.render(props)
