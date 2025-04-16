@@ -25,23 +25,16 @@ _/my/custom/store.js_
 ```javascript
 import { LegoStore } from './your/path/to-the/store.min.js'
 
+const state = { count: 0 }
 
-const store = new LegoStore(
-  // Describe the state of the store with defaults
-  {
-    user: { firstname: '', lastname: '' },
-    isAuthenticated: false,
-  },
-
-  // Describe the actions
-  {
-    signIn(username, password) {
-      if(username && password) {
-        this.setState({ user: { firstname: 'John', lastname: 'Doe' }, isAuthenticated: true })
-      }
-    }
+const actions = {
+  increment() {
+    this.setState({ count: this.state.count + 1 })
   }
-)
+}
+
+// Describe the state of the store with defaults and the actions
+const store = new LegoStore(state, actions)
 
 // export the instance that will be shared across all your components
 export default store
@@ -49,25 +42,29 @@ export default store
 
 Now you can connect your Lego components to the store:
 
-_/bricks/user-profile.html_
+_/bricks/x-incrementer.html_
 
 ```html
 <script>
   import store from '/my/custom/store.js'
 
-  function setup() {
-    store.subscribe(this, ['user', 'isAuthenticated'])
+  export default class extends Lego {
+  init() {
+    // Sync the current component with the `count` state.
+    store.subscribe(this, ['count'])
   }
 
-  function mySignInMethod() {
-    store.actions.signIn('John', 'safesecretcode')
+  increment() {
+    console.info("x-incrementer button clicked")
+    store.actions.increment()
   }
 </script>
 
 <template>
-  <p :if="state.isAuthenticated">Welcome ${state.user.firstname}</p>
+  <p :if="state.count == 0">No increment yet</p>
+  <p :if="state.count > 1">Count is ${state.count}</p>
 
-  <button :if="!state.isAuthenticated" @click="mySignInMethod">Sign in</button>
+  <button @click="mySignInMethod">Do Increment</button>
 </template>
 ```
 
@@ -82,22 +79,17 @@ class MyStore extends AbstractStore {
   }
 }
 
-const store = new MyStore(
-  // Describe the state of the store with defaults
-  {
-    user: { firstname: '', lastname: '' },
-    isAuthenticated: false,
-  },
+// Describe the state of the store with defaults
+const state = { count: 0 }
 
-  // Describe the actions
-  {
-    signIn(username, password) {
-      if(username && password) {
-        this.setState({ user: { firstname: 'John', lastname: 'Doe' }, isAuthenticated: true })
-      }
-    }
+// List all common methods
+const actions = {
+  increment() {
+    this.setState({ count: this.state.count + 1 })
   }
-)
+}
+
+const store = new MyStore(state, actions)
 
 export default store
 ```
