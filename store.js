@@ -73,3 +73,5 @@ class LegoStore extends AbstractStore {
     target.render(props)
   }
 }
+
+export { AbstractStore, LegoStore }
