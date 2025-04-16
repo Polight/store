@@ -1,7 +1,9 @@
 class AbstractStore {
+  actions = {}
+  #state = {}
+
   constructor(state = {}, actions = {}) {
-    this._state = state
-    this.actions = []
+    this.#state = state
     Object.keys(actions).map((name) => this.addAction(name, actions[name]))
     this.subscribers = []
   }
@@ -11,22 +13,25 @@ class AbstractStore {
   }
 
   subscribe(subscriber, props = []) {
-    this.subscribers.push({ target: subscriber, props: this.propsNames(props) })
+    this.subscribers.push({
+      target: subscriber,
+      props: this.propsNames(props),
+    })
   }
 
   get state() {
-    return this._state
+    return this.#state
   }
 
   setState(newState) {
-    this._state = { ...this.state, ...newState }
+    this.#state = { ...this.#state, ...newState }
     this.notify()
   }
 
   getSelectedState(props = []) {
     return props.reduce((selectedState, prop) => {
-      if (prop in this.state) {
-        selectedState[prop] = this.state[prop]
+      if (prop in this.#state) {
+        selectedState[prop] = this.#state[prop]
       }
       return selectedState
     }, {})
@@ -49,11 +54,11 @@ class AbstractStore {
    * @param Array props list of state properties to send.
    */
   notifyCall(target, props) {
-    throw new Error('notifyCall() is not implemented!')
+    throw new Error("notifyCall() is not implemented!")
   }
 
   dispatch(actionName, ...payload) {
-    const action = this._actions[actionName]
+    const action = this.actions[actionName]
     if (!action) throw new Error(`action "${actionName}" does not exist!`)
     action(...payload)
   }
@@ -68,5 +73,3 @@ class LegoStore extends AbstractStore {
     target.render(props)
   }
 }
-
-export { AbstractStore, LegoStore }
